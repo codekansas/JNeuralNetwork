@@ -55,8 +55,7 @@ public class TestDense {
 		m.train(inputs, targets, 60000);
 		double errorAfter = m.error(inputs, targets);
 		
-//		System.out.println(errorBefore);
-//		System.out.println(errorAfter);
+		System.out.println("Before: " + errorBefore + ", After: " + errorAfter);
 		
 		assertTrue(errorBefore > errorAfter);
 	}

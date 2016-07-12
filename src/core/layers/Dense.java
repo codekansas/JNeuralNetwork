@@ -21,22 +21,25 @@ public class Dense extends Layer {
 	protected ActivationFunction activation;
 	protected Initializer weightInitializer, biasInitializer;
 	
+	public static String ACTIVATION = "activation";
+	public static String WEIGHT_INITIALIZER = "weightInitializer";
+	public static String BIAS_INITIALIZER = "biasInitializer";
+	
 	public Dense(int n_out) {
-		this(n_out, new SigmoidActivation(), new GlorotInitializer(), new ZeroInitializer());
+		this(n_out, new HashMap<String,Object>());
 	}
 	
-	public Dense(int n_out, ActivationFunction activation, Initializer weightInitializer, Initializer biasInitializer) {
+	public Dense(int n_out, Map<String,Object> params) {
 		this.n_out = n_out;
-		this.activation = activation;
-		this.weightInitializer = weightInitializer;
-		this.biasInitializer = biasInitializer;
+		activation = (ActivationFunction) params.getOrDefault(ACTIVATION, new SigmoidActivation());
+		weightInitializer = (Initializer) params.getOrDefault(WEIGHT_INITIALIZER, new GlorotInitializer());
+		biasInitializer = (Initializer) params.getOrDefault(BIAS_INITIALIZER, new ZeroInitializer());
 	}
 
 	@Override
 	public int build(int n_in) {
-		Random seed = new Random(42);
-		weights = SimpleMatrix.random(n_in, n_out, -1, 1, seed);
-		biases = SimpleMatrix.random(1, n_out, -1, 1, seed);
+		weights = weightInitializer.initialize(n_in, n_out);
+		biases = biasInitializer.initialize(1, n_out);
 		return n_out;
 	}
 
